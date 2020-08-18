@@ -460,6 +460,7 @@ export default class AgendaView extends Component {
               displayLoadingIndicator={this.props.displayLoadingIndicator}
               showWeekNumbers={this.props.showWeekNumbers}
               dayHeight={this.props.dayHeight}
+              calendarHeight={this.props.calendarHeight}
             />
           </Animated.View>
           {knob}
