@@ -11,9 +11,6 @@ import styleConstructor from './style';
 import {VelocityTracker} from '../input';
 import {AGENDA_CALENDAR_KNOB} from '../testIDs';
 
-
-const DEFAULT_HEADER_HEIGHT = 104;
-const DEFAULT_KNOB_HEIGHT = 24;
 //Fallback for react-native-web or when RN version is < 0.44
 const {Text, View, Dimensions, Animated, ViewPropTypes} = ReactNative;
 const viewPropTypes =
@@ -95,8 +92,20 @@ export default class AgendaView extends Component {
     /** Called when the momentum scroll starts for the agenda list. **/
     onMomentumScrollBegin: PropTypes.func,
     /** Called when the momentum scroll stops for the agenda list. **/
-    onMomentumScrollEnd: PropTypes.func
+    onMomentumScrollEnd: PropTypes.func,
+    /** Header Height **/
+    headerHeight: PropTypes.number,
+    /** Knob Height **/
+    knobHeight: PropTypes.number,
+    /** Calendar List initial row Offset **/
+    offset: PropTypes.number
   };
+
+  static defaultProps = {
+    headerHeight: 104,
+    knobHeight: 24,
+    offset: 96,
+  }
 
   constructor(props) {
     super(props);
@@ -127,16 +136,11 @@ export default class AgendaView extends Component {
     this.generateMarkings = this.generateMarkings.bind(this);
     this.knobTracker = new VelocityTracker();
     this.state.scrollY.addListener(({value}) => this.knobTracker.add(value));
-
-    this.headerHeight = DEFAULT_HEADER_HEIGHT;
-    this.knobHeight = DEFAULT_KNOB_HEIGHT;
   }
 
   componentDidMount() {
     this._isMounted = true;
     this.loadReservations(this.props);
-    if(this.props.headerHeight) this.headerHeight = this.props.headerHeight;
-    if(this.props.knobHeight) this.knobHeight = this.props.knobHeight;
   }
 
   componentWillUnmount() {
@@ -155,11 +159,11 @@ export default class AgendaView extends Component {
   }
 
   calendarOffset() {
-    return 96 - (this.viewHeight / 2);
+    return this.props.offset - (this.viewHeight / 2);
   }
 
   initialScrollPadPosition = () => {
-    return Math.max(0, this.viewHeight - this.headerHeight);
+    return Math.max(0, this.viewHeight - this.props.headerHeight);
   }
 
   setScrollPadPosition = (y, animated) => {
@@ -367,14 +371,14 @@ export default class AgendaView extends Component {
 
     const weekdaysStyle = [this.styles.weekdays, {
       opacity: this.state.scrollY.interpolate({
-        inputRange: [agendaHeight - this.headerHeight, agendaHeight],
+        inputRange: [agendaHeight - this.props.headerHeight, agendaHeight],
         outputRange: [0, 1],
         extrapolate: 'clamp'
       }),
       transform: [{
         translateY: this.state.scrollY.interpolate({
-          inputRange: [Math.max(0, agendaHeight - this.headerHeight), agendaHeight],
-          outputRange: [-this.headerHeight, 0],
+          inputRange: [Math.max(0, agendaHeight - this.props.headerHeight), agendaHeight],
+          outputRange: [-this.props.headerHeight, 0],
           extrapolate: 'clamp'
         })
       }]
@@ -401,16 +405,16 @@ export default class AgendaView extends Component {
       // limit header height until everything is setup for calendar dragging
       headerStyle.push({height: 0});
       // fill header with appStyle.calendarBackground background to reduce flickering
-      weekdaysStyle.push({height: this.headerHeight});
+      weekdaysStyle.push({height: this.props.headerHeight});
     }
 
     const shouldAllowDragging = !this.props.hideKnob && !this.state.calendarScrollable;
-    const scrollPadPosition = (shouldAllowDragging ? this.headerHeight : 0) - this.knobHeight;
+    const scrollPadPosition = (shouldAllowDragging ? this.props.headerHeight : 0) - this.props.knobHeight;
 
     const scrollPadStyle = {
       position: 'absolute',
       width: 80,
-      height: this.knobHeight,
+      height: this.props.knobHeight,
       top: scrollPadPosition,
       left: (this.viewWidth - 80) / 2
     };
@@ -490,7 +494,7 @@ export default class AgendaView extends Component {
         >
           <View
             testID={AGENDA_CALENDAR_KNOB}
-            style={{height: agendaHeight + this.knobHeight}}
+            style={{height: agendaHeight + this.props.knobHeight}}
             onLayout={this.onScrollPadLayout}
           />
         </Animated.ScrollView>

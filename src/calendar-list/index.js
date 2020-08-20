@@ -13,7 +13,6 @@ import {STATIC_HEADER} from '../testIDs';
 
 
 const {width} = Dimensions.get('window');
-const DAY_HEIGHT = 46;
 
 /**
  * @description: Calendar List component for both vertical and horizontal calendars
@@ -59,6 +58,7 @@ class CalendarList extends Component {
     horizontal: false,
     calendarWidth: width,
     calendarHeight: 360,
+    dayHeight: 46,
     pastScrollRange: 50,
     futureScrollRange: 50,
     showScrollIndicator: false,
@@ -76,8 +76,6 @@ class CalendarList extends Component {
     this.viewabilityConfig = {
       itemVisiblePercentThreshold: 20
     };
-
-    this.dayHeight = DAY_HEIGHT;
 
     const rows = [];
     const texts = [];
@@ -111,10 +109,6 @@ class CalendarList extends Component {
     this.onLayout = this.onLayout.bind(this);
   }
 
-  componentDidMount() {
-    if(this.props.dayHeight) this.dayHeight = this.props.dayHeight;
-  }
-
   onLayout(event) {
     if (this.props.onLayout) {
       this.props.onLayout(event);
@@ -133,7 +127,7 @@ class CalendarList extends Component {
       for (let i = 0; i < days.length; i++) {
         week = Math.floor(i / 7);
         if (dateutils.sameDate(days[i], day)) {
-          scrollAmount += this.dayHeight * week;
+          scrollAmount += this.props.dayHeight * week;
           break;
         }
       }
