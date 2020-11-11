@@ -272,7 +272,7 @@ export default class AgendaView extends Component {
     // in CalendarList listView, but that might impact performance when scrolling
     // month list in expanded CalendarList.
     // Further info https://github.com/facebook/react-native/issues/1831
-    this.calendar.scrollToDay(this.state.selectedDay, this.calendarOffset() + 1, true);
+    this.calendar.scrollToDay(this.state.selectedDay, this.calendarOffset() + 1, false);
   }
 
   _chooseDayFromCalendar(d) {
