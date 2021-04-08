@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import React, {Component, useRef, useEffect} from 'react';
+import {Text, View, Animated} from 'react-native';
 import Calendar from '../calendar';
+import CalendarHeader from '../calendar/header';
 import styleConstructor from './style';
+import {xdateToData, parseDate} from '../interface';
 
 
 class CalendarListItem extends Component {
@@ -56,6 +58,8 @@ class CalendarListItem extends Component {
   render() {
     const row = this.props.item;
 
+    console.log('test', this.props)
+
     if (row.getTime) {
       return (
         <Calendar
@@ -92,11 +96,75 @@ class CalendarListItem extends Component {
     } else {
       const text = row.toString();
 
-      return (
-        <View style={[{height: this.props.calendarHeight, width: this.props.calendarWidth}, this.style.placeholder]}>
-          <Text allowFontScaling={false} style={this.style.placeholderText}>{text}</Text>
-        </View>
-      );
+      return this.props.renderPlaceholderContent
+        ?
+          <>
+          <View style={[{height: this.props.calendarHeight, width: this.props.calendarWidth }]}>
+            <>
+              {this.props.renderPlaceholderHeader(text)}
+              <CalendarHeader
+                testID={this.props.testID}
+                //ref={c => this.header = c}
+                style={this.props.headerStyle}
+                theme={this.props.theme}
+                hideArrows={this.props.hideArrows}
+                month={''}
+                addMonth={this.addMonth}
+                showIndicator={false}
+                firstDay={this.props.firstDay}
+                showSixWeeks={this.props.showSixWeeks}
+                renderArrow={this.props.renderArrow}
+                monthFormat={this.props.monthFormat}
+                hideDayNames={this.props.hideDayNames}
+                weekNumbers={this.props.showWeekNumbers}
+                onPressArrowLeft={this.props.onPressArrowLeft}
+                onPressArrowRight={this.props.onPressArrowRight}
+                webAriaLevel={this.props.webAriaLevel}
+                disableArrowLeft={this.props.disableArrowLeft}
+                disableArrowRight={this.props.disableArrowRight}
+                disabledDaysIndexes={this.props.disabledDaysIndexes}
+                renderHeader={this.props.renderHeader}
+              />
+              {this.props.renderPlaceholderContent({height: this.props.calendarHeight, width: this.props.calendarWidth})}
+            </>
+          </View>
+          {/* <Calendar
+            testID={`${this.props.testID}_${row}`}
+            theme={this.props.theme}
+            style={[{height: this.props.calendarHeight, width: this.props.calendarWidth}, this.style.calendar, this.props.style]}
+            current={row}
+            hideArrows={this.props.hideArrows}
+            hideExtraDays={this.props.hideExtraDays}
+            disableMonthChange
+            markedDates={[]}
+            markingType={this.props.markingType}
+            hideDayNames={this.props.hideDayNames}
+            onDayPress={this.props.onDayPress}
+            onDayLongPress={this.props.onDayLongPress}
+            displayLoadingIndicator={this.props.displayLoadingIndicator}
+            minDate={this.props.minDate}
+            maxDate={this.props.maxDate}
+            firstDay={this.props.firstDay}
+            monthFormat={this.props.monthFormat}
+            dayComponent={this.props.dayComponent}
+            disabledByDefault={this.props.disabledByDefault}
+            showWeekNumbers={this.props.showWeekNumbers}
+            renderArrow={this.props.renderArrow}
+            onPressArrowLeft={this.props.horizontal ? this.onPressArrowLeft : this.props.onPressArrowLeft}
+            onPressArrowRight={this.props.horizontal ? this.onPressArrowRight : this.props.onPressArrowRight}
+            headerStyle={this.props.horizontal ? this.props.headerStyle : undefined}
+            accessibilityElementsHidden={this.props.accessibilityElementsHidden} // iOS
+            importantForAccessibility={this.props.importantForAccessibility} // Android
+            renderHeader={this.props.renderHeader}
+            disableAllTouchEventsForDisabledDays={this.props.disableAllTouchEventsForDisabledDays}
+          /> */}
+        </>
+        :
+          (
+            <View style={[{height: this.props.calendarHeight, width: this.props.calendarWidth}, this.style.placeholder]}>
+              <Text allowFontScaling={false} style={this.style.placeholderText}>{text}</Text>
+            </View>
+          );
     }
   }
 }

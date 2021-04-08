@@ -51,7 +51,10 @@ class CalendarList extends Component {
     /** Whether to use static header that will not scroll with the list (horizontal only) */
     staticHeader: PropTypes.bool,
     /** A custom key extractor for the generated calendar months */
-    keyExtractor: PropTypes.func
+    keyExtractor: PropTypes.func,
+    // 3vil custom
+    renderPlaceholderHeader: PropTypes.object,
+    renderPlaceholderContent: PropTypes.object
   }
 
   static defaultProps = {
@@ -218,6 +221,9 @@ class CalendarList extends Component {
         calendarWidth={this.props.horizontal ? this.props.calendarWidth : undefined}
         {...this.props}
         style={this.props.calendarStyle}
+        // 3vil custom
+        renderPlaceholderHeader={this.props.renderPlaceholderHeader}
+        renderPlaceholderContent={this.props.renderPlaceholderContent}
       />
     );
   }

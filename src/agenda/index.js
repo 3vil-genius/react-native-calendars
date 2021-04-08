@@ -98,7 +98,10 @@ export default class AgendaView extends Component {
     /** Knob Height **/
     knobHeight: PropTypes.number,
     /** Calendar List initial row Offset **/
-    offset: PropTypes.number
+    offset: PropTypes.number,
+    // 3vil custom
+    renderPlaceholderHeader: PropTypes.object,
+    renderPlaceholderContent: PropTypes.object
   };
 
   static defaultProps = {
@@ -179,7 +182,13 @@ export default class AgendaView extends Component {
     // When user touches knob, the actual component that receives touch events is a ScrollView.
     // It needs to be scrolled to the bottom, so that when user moves finger downwards,
     // scroll position actually changes (it would stay at 0, when scrolled to the top).
-    this.setScrollPadPosition(this.initialScrollPadPosition(), false);
+    
+    // original
+    //this.setScrollPadPosition(this.initialScrollPadPosition(), false);
+    //3vil custom
+    this.setScrollPadPosition(0, true);
+    this.enableCalendarScrolling();
+    
     // delay rendering calendar in full height because otherwise it still flickers sometimes
     setTimeout(() => this.setState({calendarIsReady: true}), 0);
   }
@@ -465,6 +474,9 @@ export default class AgendaView extends Component {
               showWeekNumbers={this.props.showWeekNumbers}
               dayHeight={this.props.dayHeight}
               calendarHeight={this.props.calendarHeight}
+              // 3vil custom
+              renderPlaceholderHeader={this.props.renderPlaceholderHeader}
+              renderPlaceholderContent={this.props.renderPlaceholderContent}
             />
           </Animated.View>
           {knob}
