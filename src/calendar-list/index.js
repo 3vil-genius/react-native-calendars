@@ -54,7 +54,8 @@ class CalendarList extends Component {
     keyExtractor: PropTypes.func,
     // 3vil custom
     renderPlaceholderHeader: PropTypes.object,
-    renderPlaceholderContent: PropTypes.object
+    renderPlaceholderContent: PropTypes.object,
+    enableLogging: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -224,6 +225,7 @@ class CalendarList extends Component {
         // 3vil custom
         renderPlaceholderHeader={this.props.renderPlaceholderHeader}
         renderPlaceholderContent={this.props.renderPlaceholderContent}
+        enableLogging={this.props.enableLogging}
       />
     );
   }
